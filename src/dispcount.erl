@@ -8,6 +8,9 @@
 -callback checkout(From::pid(), CallbackState::any()) -> {ok, Resource::any(), NewCallbackState::any()} |
                                     {error, Reason::any(), NewCallbackState::any()} |
                                     {stop, Reason::any(), NewCallbackState::any()}.
+-callback transaction(From::pid(), Fun::function(), CallbackState::any()) -> {ok, NewCallbackState::any()} |
+                                    {error, Reason::any(), NewCallbackState::any()} |
+                                    {stop, Reason::any(), NewCallbackState::any()}.
 -callback checkin(Resource::any(), CallbackState::any()) -> {ok, NewCallbackState::any()} |
                                    {ignore, CallbackState::any()} |
                                    {stop, Reason::any(), NewCallbackState::any()}.
