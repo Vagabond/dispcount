@@ -2,7 +2,7 @@
 -behaviour(application).
 -export([start/2,stop/1]).
 -export([start_dispatch/3, stop_dispatch/1,
-         dispatcher_info/1, checkout/1, checkout/2, checkin/3]).
+         dispatcher_info/1, checkout/1, checkout/2, transaction/2, checkin/3]).
 
 -callback init(Args::[any()]) -> {ok, CallbackState::any()}.
 -callback checkout(From::pid(), CallbackState::any()) -> {ok, Resource::any(), NewCallbackState::any()} |
@@ -51,6 +51,9 @@ checkout(Info) ->
 -spec checkout(term(), timeout()) -> {ok, term(), term()} | {error, term()}.
 checkout(Info, Timeout) ->
     dispcount_watcher:checkout(Info, Timeout).
+
+transaction(Info, Fun) ->
+    dispcount_watcher:transaction(Info, Fun).
 
 -spec checkin(term(), term(), term()) -> ok.
 checkin(Info, CheckinRef, Resource) ->
