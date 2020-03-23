@@ -77,8 +77,8 @@ handle_info(continue_init, {Parent, ChildSpec, Conf}) ->
     Sup = case supervisor:start_child(Parent, ChildSpec) of
               {error, {already_started, OldPid}} ->
                   %% get rid of old supervisor with stale references in it
-                  ok = supervisor:terminate_child(Parent, ChildSpec),
-                  ok = supervisor:delete_child(Parent, ChildSpec),
+                  ok = supervisor:terminate_child(Parent, watchers_sup),
+                  ok = supervisor:delete_child(Parent, watchers_sup),
                   Ref = erlang:monitor(process, OldPid),
                   receive {'DOWN', Ref, process, OldPid, _} ->
                               ok
