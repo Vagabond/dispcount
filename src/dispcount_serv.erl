@@ -77,7 +77,7 @@ handle_info(continue_init, {Parent, ChildSpec, Conf}) ->
     Sup = case supervisor:start_child(Parent, ChildSpec) of
               {error, {already_started, OldPid}} ->
                   %% get rid of old supervisor with stale references in it
-                  ok = supervisor:terminate_child(Parent, OldPid),
+                  _ = supervisor:terminate_child(Parent, OldPid),
                   {ok, S} = supervisor:start_child(Parent, ChildSpec),
                   S;
               {ok, S} ->
