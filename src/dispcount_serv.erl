@@ -74,7 +74,15 @@ handle_cast(_Cast, State) ->
     {noreply, State}.
 
 handle_info(continue_init, {Parent, ChildSpec, Conf}) ->
-    {ok, Sup} = supervisor:start_child(Parent, ChildSpec),
+    Sup = case supervisor:start_child(Parent, ChildSpec) of
+              {error, {already_started, OldPid}} ->
+                  %% get rid of old supervisor with stale references in it
+                  ok = supervisor:terminate_child(Parent, OldPid),
+                  {ok, S} = supervisor:start_child(Parent, ChildSpec),
+                  S;
+              {ok, S} ->
+                  S
+          end,
     ok = start_watchers(Sup, Conf),
     {noreply, Conf};
 handle_info(_Info, State) ->
